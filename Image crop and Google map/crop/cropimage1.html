@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Crop</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Image Upload</h3>
+
+    <input type="file" id="images" name="images" accept="image/*" onchange="openFile(event)">
+    <div class="imgdiv" id="imgdiv">
+        <div class="draggable" draggable="true" id="draggable">
+            <div id="top_left" class="top_left"></div>
+            <div id="top_right" class="top_right"></div>
+            <div id="bottom_left" class="bottom_left"></div>
+            <div id="bottom_right" class="bottom_right"></div>
+        </div>
+        </img>
+    </div>
+
+    <br />
+    <!-- drag and drop -->
+    <div id="box" ondrop="dragDrop(event)" ondragover="allowDrop(event)">drop image here </div>
+
+    <canvas id="canvasid" height="500" width="500"></canvas><br />
+
+    <script>
+
+        var openFile = function (file) {
+            var input = file.target;
+            var reader = new FileReader();
+            reader.onload = function () {
+                dataURL = reader.result;
+                var imgid = document.getElementById('imgdiv');
+                imgid.style.backgroundImage = 'url(' + dataURL + ')'
+                imgid.style.display = "block";
+
+                imgid.onmouseenter = function (e) {
+                    // hide the dropbox...
+                    var dropbox = document.getElementById('box').style.display = "none";
+
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "block";
+                    console.log("mouse enter")
+
+
+                    imgid.addEventListener('mousedown', function (event) {
+
+                        event.preventDefault();
+
+                        dragElement.ondragstart = function () {
+                            return false;
+                        };
+                        startDrag(dragElement, event.clientX, event.clientY);
+
+                        function onMouseUp(event) {
+
+                            var result = confirm("are you sure you want to save this image?");
+                            if (result === true) {
+                                console.log("x and y in up", newX, newY);
+                                drawimage(input.files[0], input.files[0], newX, newY);
+                            }
+
+                            document.removeEventListener('mousemove', onMouseMove);
+                            dragElement.removeEventListener('mouseup', onMouseUp);
+                        };
+
+                        function onMouseMove(event) {
+                            var moveX = event.clientX;
+                            var moveY = event.clientY;
+                            console.log("moving", moveX, moveY)
+                            newX = moveX;
+                            newY = moveY;
+                            dragElement.style.left = moveX + 'px';
+                            dragElement.style.top = moveY + 'px';
+                        }
+
+                        function startDrag(element, clientX, clientY) {
+                            document.addEventListener('mousemove', onMouseMove, false);
+                            element.addEventListener('mouseup', onMouseUp);
+                            element.style.position = 'fixed';
+
+                            moveAt(clientX, clientY);
+                        };
+                        function moveAt(clientX, clientY) {
+                            newX = (event.pageX - clientX) + event.offsetX;
+                            newY = (event.pageY - clientY) + event.offsetY;
+                            console.log("x and y", clientX, clientY);
+                            dragElement.style.left = clientX + 'px';
+                            dragElement.style.top = clientY + 'px';
+                        }
+                    });
+
+                }
+                imgid.onmouseleave = function (e) {
+                    console.log("mouse leave")
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "none";
+                }
+                window.onscroll = function (e) {
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "none";
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0])
+        };
+        //         }
+        //     }
+        // }
+    </script>
+
+
+</body>
+
+</html>

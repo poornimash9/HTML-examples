@@ -1,0 +1,145 @@
+<html>
+
+<head>
+    <title>Map</title>
+    <style>
+        * {
+            padding: 0%;
+            margin: 0%;
+            box-sizing: border-box;
+        }
+
+        #map {
+            height: 100%;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="search">
+        <div style="display:flex;flex-direction:column">
+            <span style="margin-left:10px;">Enter State*</span>
+            <input id="inputstate" style="margin-left:10px;" type="search" placeholder="search State here" required>
+        </div><br />
+        <div style="display:flex;flex-direction:column">
+            <span style="margin-left:10px;">Enter your City*</span>
+            <input id="inputcity" style="margin-left:10px;" type="text" placeholder="search City here" required>
+        </div><br />
+        <div style="display:flex;flex-direction:column">
+            <span style="margin-left:10px;">Your Location</span>
+            <input id="inputAddress" style="margin-left:10px;" type="text" placeholder="Your address" required>
+        </div><br />
+
+    </div>
+    <div id="map"></div>
+
+    <script>
+
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 20.5937, lng: 78.9629 },
+                zoom: 4
+            });
+            var inputState = document.getElementById('inputstate');
+            var inputCity = document.getElementById('inputcity');
+            var inputLocation=document.getElementById('inputAddress');
+
+            var stateName, CityName, marker,address;
+            var geocoder = new google.maps.Geocoder;
+
+            marker = new google.maps.Marker({
+                position: { lat: 20.5937, lng: 78.9629 },
+                map: map,
+            });
+            var options = {
+                componentRestrictions: { 'country': 'in' },
+            };
+            var autocompleteState = new google.maps.places.Autocomplete(inputState, options);
+
+            var bounding;
+
+            autocompleteState.addListener('place_changed', function () {
+                var place = autocompleteState.getPlace();
+                console.log(place);
+                if (!place.geometry) {
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                } else {
+                    if (place.address_components[0].types[0] === 'administrative_area_level_1') {
+                        stateName = place.address_components[0].short_name;
+
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(9);
+                        marker.setPosition(place.geometry.location);
+                        console.log(map.getBounds());
+                        var options = {
+                            componentRestrictions: { 'country': 'in' },
+                            bounds: map.getBounds(),
+                            types: ['geocode'],
+                            strictBounds: true
+                        };
+                        var autocompleteCity = new google.maps.places.Autocomplete(inputCity, options);
+                        autocompleteCity.addListener('place_changed', function () {
+                            var place = autocompleteCity.getPlace();
+                            console.log(place);
+                            if (!place.geometry) {
+                                window.alert("No details available for input: '" + place.name + "'");
+                                return;
+                            } else {
+                                if (place.address_components[2].short_name === stateName) {
+                                    map.setCenter(place.geometry.location);
+                                    map.setZoom(11);
+                                    marker.setPosition(place.geometry.location);
+
+                                    map.addListener('click', function (e) {
+                                        console.log("marker", e.latLng);
+                                        geocoder.geocode({ 'location': e.latLng }, function (results, status) {
+                                            if (status === 'OK') {
+                                                if (results[0]) {
+                                                    map.setZoom(11);
+                                                    marker.setPosition(e.latLng);
+                                                    inputLocation.value=results[0].formatted_address;
+                                                    address=results[0].formatted_address;
+                                                } else {
+                                                    window.alert('No results found');
+                                                }
+                                            } else {
+                                                window.alert('Geocoder failed due to: ' + status);
+                                            }
+                                        });
+
+                                        var result = confirm("Are you sure you want to save this address?");
+                                        if (result === true) {
+                                            jQuery.ajax({
+                                                url: "address?stateplaceid=" + statePlaceId + "&stateName=" + stateName + "&cityplaceid=" + cityPlaceId + "&cityName" + CityName + "&address" + address,
+                                                type: "POST",
+                                                success: function (result) {
+                                                    window.alert("successfully saved");
+                                                }
+                                            })
+                                            console.log("saved")
+                                        }
+                                    });
+                                } else {
+                                    console.log("invalid address")
+                                }
+
+                            }
+                        })
+
+                    } else {
+                        window.alert("not an state");
+                    }
+                }
+            });
+        }
+        //
+    </script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTtkCm-fF511PHu2U5k9RvcaGY7jnRmHk&libraries=places&callback=initMap"
+        async defer></script>
+</body>
+
+</html>

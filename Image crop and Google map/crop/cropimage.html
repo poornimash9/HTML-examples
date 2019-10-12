@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        .draggable {
+            cursor: pointer;
+            height: 200px;
+            width: 200px;
+            border: dotted;
+            display: none;
+            position: absolute;
+            z-index: 3;
+        }
+
+        .imgdiv {
+            height: 600px;
+            width: 600px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid black;
+            background-repeat: no-repeat;
+            object-fit: cover;
+            display: none;
+        }
+
+        #box {
+            width: 50%;
+            height: 200px;
+            border: 3px solid green;
+        }
+
+        .top_left {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            left: -5px;
+            top: -5px;
+            border: 1px solid blue;
+            cursor: nwse-resize;
+        }
+
+        .top_right {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            right: -5px;
+            top: -5px;
+            border: 1px solid blue;
+            cursor: nesw-resize;
+        }
+
+        .bottom_left {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            left: -5px;
+            bottom: -5px;
+            border: 1px solid blue;
+            cursor: nesw-resize;
+        }
+
+        .bottom_right {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            right: -5px;
+            bottom: -5px;
+            border: 1px solid blue;
+            cursor: nwse-resize;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <h3>Image Upload</h3>
+    <form>
+        <input type="file" id="images" name="images" accept="image/*" onchange="openFile(event)">
+        <div class="imgdiv" id="imgdiv">
+            <div class="draggable" draggable="true" id="draggable">
+                <div id="top_left" class="top_left"></div>
+                <div id="top_right" class="top_right"></div>
+                <div id="bottom_left" class="bottom_left"></div>
+                <div id="bottom_right" class="bottom_right"></div>
+            </div>
+            </img>
+        </div>
+
+        <br />
+        <!-- drag and drop -->
+        <div id="box" ondrop="dragDrop(event)" ondragover="allowDrop(event)">drop image here </div>
+
+        <canvas id="canvasid" height="500" width="500"></canvas><br />
+    </form>
+
+
+    <script>
+
+        var para1;
+        function drawimage(link, file_details, p1, p2) {
+            var URL = window.URL;
+            var url = URL.createObjectURL(link);
+            console.log("url", url);
+            var canvas = document.getElementById('canvasid');
+            var context = canvas.getContext("2d");
+            var imageurl = new Image();
+            imageurl.onload = function () {
+                context.drawImage(imageurl, p1, p2, 200, 200, 0, 0, 500, 500);
+                para1 = canvas.toDataURL();
+                console.log("para1", para1)
+                jQuery.ajax({
+                    url: "file?fname=" + file_details.name + "&size=" + file_details.size + "&type=" + file_details.type,
+                    type: "POST",
+                    data: { 'image': (para1) },
+                    dataType: "json",
+                    beforeSend: function (x) {
+                        if (x && x.overrideMimeType) {
+                            x.overrideMimeType("application/j-son;charset=UTF-8");
+                        }
+                    },
+                    success: function (result) {
+                        window.location.href = "crop.html";
+
+                    }
+                })
+            }
+            imageurl.src = url;
+        }
+
+        var dataURL;
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function dragDrop(ev) {
+            let newX, newY;
+            ev.preventDefault();
+            var data = ev.dataTransfer.files;
+            console.log("... Drop: File ", data[0]);
+            var droptarget = document.getElementById("imgdiv");
+            var reader = new FileReader();
+            reader.onload = function () {
+                dataURL = reader.result;
+                droptarget.style.backgroundImage = 'url(' + dataURL + ')'
+                droptarget.style.display = "block";
+                document.getElementById('images').style.display = "none";
+                document.getElementById('box').style.display = "none";
+                document.getElementById('draggable').style.display = "block";
+                let dragElement = document.getElementById('draggable');
+
+                droptarget.onmouseenter = function (e) {
+                    // hide the dropbox...
+                    var dropbox = document.getElementById('box').style.display = "none";
+
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "block";
+                    console.log("mouse enter")
+                    droptarget.addEventListener('mousedown', function (event) {
+
+                        event.preventDefault();
+
+                        dragElement.ondragstart = function () {
+                            return false;
+                        };
+                        startDrag(dragElement, event.clientX, event.clientY);
+
+                        function onMouseUp(event) {
+
+                            var result = confirm("are you sure you want to save this image?");
+                            if (result === true) {
+                                console.log("x and y in up", newX, newY);
+                                drawimage(data[0], data[0], newX, newY);
+                            }
+
+                            document.removeEventListener('mousemove', onMouseMove);
+                            dragElement.removeEventListener('mouseup', onMouseUp);
+                        };
+
+                        function onMouseMove(event) {
+                            var moveX = event.clientX;
+                            var moveY = event.clientY;
+                            console.log("moving", moveX, moveY)
+                            newX = moveX;
+                            newY = moveY;
+                            dragElement.style.left = moveX + 'px';
+                            dragElement.style.top = moveY + 'px';
+                        }
+
+                        function startDrag(element, clientX, clientY) {
+                            document.addEventListener('mousemove', onMouseMove, false);
+                            element.addEventListener('mouseup', onMouseUp);
+                            element.style.position = 'fixed';
+
+                            moveAt(clientX, clientY);
+                        };
+                        function moveAt(clientX, clientY) {
+                            newX = (event.pageX - clientX) + event.offsetX;
+                            newY = (event.pageY - clientY) + event.offsetY;
+                            console.log("x and y", clientX, clientY);
+                            dragElement.style.left = clientX + 'px';
+                            dragElement.style.top = clientY + 'px';
+                        }
+                    });
+
+                }
+                droptarget.onmouseleave = function (e) {
+                    console.log("mouse leave")
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "none";
+                }
+                window.onscroll = function (e) {
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "none";
+                }
+
+            };
+            reader.readAsDataURL(data[0]);
+            console.log(data[0])
+        }
+
+        var openFile = function (file) {
+
+
+            let shiftX = 0, shiftY = 0, newX = 0, newY = 0, imgX = 0, imgY = 0;
+            var input = file.target;
+            var reader = new FileReader();
+            reader.onload = function () {
+                dataURL = reader.result;
+                var imgid = document.getElementById('imgdiv');
+                imgid.style.backgroundImage = 'url(' + dataURL + ')'
+                imgid.style.display = "block";
+
+                imgid.onmouseenter = function (e) {
+                    // hide the dropbox...
+                    var dropbox = document.getElementById('box').style.display = "none";
+
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "block";
+                    console.log("mouse enter")
+
+                    imgid.addEventListener('mousedown', function (event) {
+
+                        event.preventDefault();
+
+                        dragElement.ondragstart = function () {
+                            return false;
+                        };
+                        startDrag(dragElement, event.clientX, event.clientY);
+
+                        function onMouseUp(event) {
+
+                            var result = confirm("are you sure you want to save this image?");
+                            if (result === true) {
+                                console.log("x and y in up", newX, newY);
+                                drawimage(input.files[0], input.files[0], newX, newY);
+                            }
+
+                            document.removeEventListener('mousemove', onMouseMove);
+                            dragElement.removeEventListener('mouseup', onMouseUp);
+                        };
+
+                        function onMouseMove(event) {
+                            var moveX = event.clientX;
+                            var moveY = event.clientY;
+                            console.log("moving", moveX, moveY)
+                            newX = moveX;
+                            newY = moveY;
+                            dragElement.style.left = moveX + 'px';
+                            dragElement.style.top = moveY + 'px';
+                        }
+
+                        function startDrag(element, clientX, clientY) {
+                            document.addEventListener('mousemove', onMouseMove, false);
+                            element.addEventListener('mouseup', onMouseUp);
+                            element.style.position = 'fixed';
+
+                            moveAt(clientX, clientY);
+                        };
+                        function moveAt(clientX, clientY) {
+                            newX = (event.pageX - clientX) + event.offsetX;
+                            newY = (event.pageY - clientY) + event.offsetY;
+                            console.log("x and y", clientX, clientY);
+                            dragElement.style.left = clientX + 'px';
+                            dragElement.style.top = clientY + 'px';
+                        }
+                    });
+
+                }
+                imgid.onmouseleave = function (e) {
+                    console.log("mouse leave")
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "none";
+                }
+                window.onscroll = function (e) {
+                    let dragElement = document.getElementById('draggable');
+                    dragElement.style.display = "none";
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0])
+        };
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <title>Map Bound</title>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            .search{
+                float: left;
+                width: 50%;
+            }
+            #map{
+                height: 80%;
+                width: 80%;
+                /* position: relative;
+                float: left; 
+                width: 50%; */
+                /* float: right; 
+                height: 80%;
+                width: 50%; */
+            }
+        </style>
+    </head>
+
+    <body>
+            <div class="search">
+                <!-- <form class="inputfields"> -->
+                    <div style="display:flex;flex-direction:column">
+                        <span style="margin-left:10px;">Enter State*</span>
+                        <input id="inputstate" style="margin-left:10px;"  type="search" placeholder="search State here" required>
+                    </div><br/>
+                    <div style="display:flex;flex-direction:column">
+                        <span style="margin-left:10px;" >Enter your City*</span>
+                        <input id="inputcity" style="margin-left:10px;" type="text" placeholder="search City here" required>
+                    </div><br/>
+                    <!--<div style="display:flex;flex-direction:column">
+                        <span style="margin-left:10px;" >Enter your address</span>
+                        <input id="inputadd" style="margin-left:10px;" type="text" placeholder="search address here">
+                    </div><br/>
+
+                    <button style="margin-left:10px;display: flex;align-self: center" >Submit</button> -->
+                <!-- </form> -->
+            </div>
+
+            <div id="map"></div>
+            <div style="clear:both"></div>
+
+        <script>
+            // var place,map,marker;
+            function init(){
+                var indiaBound={lat:20.5937,lng:78.9629};
+                var map=new google.maps.Map( document.getElementById('map'),{
+                    center:indiaBound,
+                    zoom:5,
+                })
+                var inputstate=document.getElementById('inputstate');
+                var state=new google.maps.places.Autocomplete(inputstate);
+                state.setComponentRestrictions({'country':'in'});
+                state.addListener('place_changed',function(){
+                    var place=state.getPlace();
+                    // if(!place.geometry){
+                    //     console.log("Not a valid location")
+                    // }else{
+                        if(place.address_components[0].types[0]==='administrative_area_level_1'){
+                            map.setCenter(place.geometry.location);
+                            map.setZoom(7);
+                        }else{
+                            console.log("not an state");
+                        }
+                    // }
+                   
+                })
+               
+            }
+            
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlHOrEJQ8GpWhZzq_G3HrouDZhYrnW_EI&libraries=places&callback=init"
+        async defer></script>
+</body>
+</html>

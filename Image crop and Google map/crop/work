@@ -1,0 +1,121 @@
+// box.addEventListener('mousedown',startDrag);
+
+            // top_left.addEventListener('mousedown',startDrag);
+            // top_right.addEventListener('mousedown',startDrag);
+            // bottom_left.addEventListener('mousedown',startDrag);
+            // bottom_right.addEventListener('mousedown',startDrag);
+
+            // function startDrag(e){
+            //     window.addEventListener('mousemove',startResize);
+            //     window.addEventListener('mouseup',finishResize);
+            // }
+            // function startResize(e){
+            //     if('top_left'){
+            //         box.style.width=box_width-(e.clientX-top_left.offsetLeft);
+            //         box.style.height=box_height-(e.clientY-top_left.offsetTop);
+            //         box.style.left=box_x+(e.clientX-top_left.offsetLeft);
+            //         box.style.top=box_y+(e.clientY-top_left.offsetTop);
+            //         console.log("width",box.style.width)
+            //         // box_height=box.style.height;
+            //         // box_width=box.style.width;
+            //         // box_x=box.style.left;
+            //         // box_y=box.style.top;
+            //     }else if('top_right'){
+            //         box.style.width=(e.clientX-top_left.offsetLeft)+'px';
+            //         box.style.height=box_height-(e.clientY-top_left.offsetTop)+'px';
+            //         box.style.top=box_y+(e.clientY-top_left.offsetTop)+'px';
+            //         // box_height=box.style.height;
+            //         // box_width=box.style.width;
+            //         // box_x=box.style.left;
+            //         // box_y=box.style.top;
+            //     }else if('bottom_left'){
+            //         box.style.width=box_width-(e.clientX-top_left.offsetLeft);
+            //         box.style.height=(e.clientY-top_left.offsetTop);
+            //         box.style.left=box_x+(e.clientX-top_left.offsetLeft);
+            //         // box_height=box.style.height;
+            //         // box_width=box.style.width;
+            //         // box_x=box.style.left;
+            //         // box_y=box.style.top;
+            //     }else if('bottom_right'){
+            //         box.style.width=(e.clientX-top_left.offsetLeft);
+            //         box.style.height=(e.clientY-top_left.offsetTop);
+            //         // box_height=box.style.height;
+            //         // box_width=box.style.width;
+            //         // box_x=box.style.left;
+            //         // box_y=box.style.top;
+            //         box.style.top=box_y+(e.clientY-top_left.offsetTop);
+            //     }else{
+            //         console.log("err");
+            //     }
+                
+
+            // }
+            // function finishResize(e){
+            //     // box_height=box.style.height;
+            //     //     box_width=box.style.width;
+            //     //     box_x=box.style.left;
+            //     //     box_y=box.style.top
+            //     window.removeEventListener('mousemove', startResize, false);
+            //     window.removeEventListener('mouseup', finishResize, false);
+            // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // top_left.addEventListener('mousedown',function(event){
+            //     event.preventDefault();
+
+            //     // top_left.addEventListener('mousemove',function(event){
+            //     //     top_left.style.position="fixed";
+                    
+            //     //     top_left.style.left=event.clientX+'px';
+            //     //     top_left.style.top=event.clientY+'px';
+            //     //     box.style.left=event.clientX-box.getBoundingClientRect().left+'px';
+            //     //     box.style.top=event.clientY-box.getBoundingClientRect().top+'px';
+            //     //     console.log("1")
+            //     // })
+                
+            //     // console.log("11")
+                    
+            //     // startDrag(top_left, event.clientX, event.clientY);
+            // })
+            // top_right.addEventListener('mousedown',function(event){
+            //     top_right.style.position="fixed";
+
+            //     console.log("2")
+            //     // event.preventDefault();    
+            //     // startDrag(top_right, event.clientX, event.clientY);
+            // })
+            // bottom_left.addEventListener('mousedown',function(event){
+            //     bottom_left.style.position="fixed";
+
+            //     console.log("3")
+            //     // event.preventDefault();    
+            //     // startDrag(bottom_left, event.clientX, event.clientY);
+            // })
+            // bottom_right.addEventListener('mousedown',function(event){
+            //     bottom_right.style.position="fixed";
+
+            //     console.log("4")
+
+            //     // event.preventDefault();    
+            //     // startDrag(bottom_right, event.clientX, event.clientY);
+            // })
+            // top_left.addEventListener('mouseup',function(event){
+            //     // top_left.style.position="fixed";
+
+            //     console.log("5")
+
+            //     // event.preventDefault();    
+            //     // finishDrag(top_left, event.clientX, event.clientY);
+            // })
+       

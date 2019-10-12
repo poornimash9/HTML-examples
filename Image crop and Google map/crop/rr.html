@@ -1,0 +1,173 @@
+<html>
+    <head>
+        <style>
+            *{
+                box-sizing: border-box;
+                margin: 0%;
+                padding: 0;
+            }
+            .box{
+                height: 200px;
+                width: 200px;
+                border: 1px solid black;
+                position: relative;
+            }
+            .top_left{
+                height: 10px;
+                width: 10px;
+                position: absolute;
+                left: -5px;
+                top: -5px;
+                border: 1px solid blue;
+                cursor: nwse-resize;
+            }
+            .top_right{
+                height: 10px;
+                width: 10px;
+                position: absolute;
+                right:  -5px;
+                top: -5px;
+                border: 1px solid blue;
+                cursor: nesw-resize;
+            }
+            .bottom_left{
+                height: 10px;
+                width: 10px;
+                position: absolute;
+                left: -5px;
+                bottom:  -5px;
+                border: 1px solid blue;
+                cursor: nesw-resize;
+            }
+            .bottom_right{
+                height: 10px;
+                width: 10px;
+                position: absolute;
+                right:  -5px;
+                bottom:  -5px;
+                border: 1px solid blue;
+                cursor: nwse-resize;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="box" class="box">
+            <div id="top_left" class="top_left"></div>
+            <div id="top_right" class="top_right"></div>
+            <div id="bottom_left" class="bottom_left"></div>
+            <div id="bottom_right" class="bottom_right"></div>
+        </div>
+
+        <script>
+            const box_height=200,box_width=200;
+            var box=document.getElementById('box');
+            var box_x=box.getBoundingClientRect().left;
+            var box_y=box.getBoundingClientRect().top;
+
+            var top_left=document.getElementById('top_left');
+            var top_right=document.getElementById('top_right');
+            var bottom_left=document.getElementById('bottom_left');
+            var bottom_right=document.getElementById('bottom_right');
+            
+            box.addEventListener('mousedown',startDrag,false);
+
+            top_left.addEventListener('mousedown',startDrag,false);
+            top_right.addEventListener('mousedown',startDrag,false);
+            bottom_left.addEventListener('mousedown',startDrag,false);
+            bottom_right.addEventListener('mousedown',startDrag,false);
+
+            function startDrag(e){
+                window.addEventListener('mousemove',startResize,false);
+                window.addEventListener('mouseup',finishResize,false);
+            }
+            function startResize(e){
+                if(top_left){
+                    box.style.width=box_width-(e.clientX-top_left.offsetLeft);
+                    box.style.height=box_height-(e.clientY-top_left.offsetTop);
+                    box.style.left=box_x+(e.clientX-top_left.offsetLeft);
+                    box.style.top=box_y+(e.clientY-top_left.offsetTop);
+                }else if(top_right){
+                    box.style.width=(e.clientX-top_left.offsetLeft)+'px';
+                    box.style.height=box_height-(e.clientY-top_left.offsetTop)+'px';
+                    box.style.top=box_y+(e.clientY-top_left.offsetTop)+'px';
+                }else if(bottom_left){
+                    box.style.width=box_width-(e.clientX-top_left.offsetLeft);
+                    box.style.height=(e.clientY-top_left.offsetTop);
+                    box.style.left=box_x+(e.clientX-top_left.offsetLeft);
+                }else if(bottom_right){
+                    box.style.width=(e.clientX-top_left.offsetLeft);
+                    box.style.height=(e.clientY-top_left.offsetTop);
+                    // box.style.top=box_y+(e.clientY-top_left.offsetTop);
+                }else{
+                    console.log("err");
+                }
+                
+
+            }
+            function finishResize(e){
+                window.removeEventListener('mousemove', startResize, false);
+                window.removeEventListener('mouseup', finishResize, false);
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // top_left.addEventListener('mousedown',function(event){
+            //     event.preventDefault();
+
+            //     // top_left.addEventListener('mousemove',function(event){
+            //     //     top_left.style.position="fixed";
+                    
+            //     //     top_left.style.left=event.clientX+'px';
+            //     //     top_left.style.top=event.clientY+'px';
+            //     //     box.style.left=event.clientX-box.getBoundingClientRect().left+'px';
+            //     //     box.style.top=event.clientY-box.getBoundingClientRect().top+'px';
+            //     //     console.log("1")
+            //     // })
+                
+            //     // console.log("11")
+                    
+            //     // startDrag(top_left, event.clientX, event.clientY);
+            // })
+            // top_right.addEventListener('mousedown',function(event){
+            //     top_right.style.position="fixed";
+
+            //     console.log("2")
+            //     // event.preventDefault();    
+            //     // startDrag(top_right, event.clientX, event.clientY);
+            // })
+            // bottom_left.addEventListener('mousedown',function(event){
+            //     bottom_left.style.position="fixed";
+
+            //     console.log("3")
+            //     // event.preventDefault();    
+            //     // startDrag(bottom_left, event.clientX, event.clientY);
+            // })
+            // bottom_right.addEventListener('mousedown',function(event){
+            //     bottom_right.style.position="fixed";
+
+            //     console.log("4")
+
+            //     // event.preventDefault();    
+            //     // startDrag(bottom_right, event.clientX, event.clientY);
+            // })
+            // top_left.addEventListener('mouseup',function(event){
+            //     // top_left.style.position="fixed";
+
+            //     console.log("5")
+
+            //     // event.preventDefault();    
+            //     // finishDrag(top_left, event.clientX, event.clientY);
+            // })
+        </script>
+    </body>
+</html>

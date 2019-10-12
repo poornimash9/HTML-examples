@@ -1,0 +1,98 @@
+function initMap() {
+        //     var map = new google.maps.Map(document.getElementById('map'), {
+        //         center: { lat: 20.5937, lng: 78.9629 },
+        //         zoom: 4
+        //     });
+        //     var inputState = document.getElementById('inputstate');
+        //     var inputCity = document.getElementById('inputcity');
+        //     var inputLocation = document.getElementById('inputAddress');
+
+        //     var stateName, CityName;
+        //     var options = {
+        //         componentRestrictions: { 'country': 'in' },
+        //         types: ['regions'],
+        //         strictbounds: true
+        //     };
+        //     var autocompleteState = new google.maps.places.Autocomplete(inputState, options);
+
+        //     /* autocompleteState.setComponentRestrictions({'country':'in'});
+            
+        //     autocompleteState.bindTo('bounds', map); */
+
+        //     var bounding, address, statePlaceId;
+
+        //     autocompleteState.addListener('place_changed', function () {
+        //         var place = autocompleteState.getPlace();
+        //         console.log(place);
+        //         if (!place.geometry) {
+        //             window.alert("No details available for input: '" + place.name + "'");
+        //             return;
+        //         } else {
+        //             if (place.address_components[0].types[0] === 'administrative_area_level_1') {
+        //                 bounding = place.geometry.viewport;
+        //                 console.log(bounding);
+
+        //                 stateName = place.address_components[0].long_name;
+        //                 statePlaceId = place.place_id;
+
+        //                 map.fitBounds(place.geometry.location);
+        //                 map.setCenter(place.geometry.location);
+        //                 map.setZoom(9);
+        //                 console.log(map.getBounds());
+        //                 var options = {
+        //                     componentRestrictions: { 'country': 'in' },
+        //                     bounds: map.getBounds(),
+        //                     types: ['geocode'],
+        //                     strictbounds: true
+        //                 };
+
+        //                 var autocompleteCity = new google.maps.places.Autocomplete(inputCity, options);
+        //                 autocompleteCity.addListener('place_changed', function () {
+        //                     var place = autocompleteCity.getPlace();
+        //                     console.log(place);
+        //                     if (!place.geometry) {
+        //                         window.alert("No details available for input: '" + place.name + "'");
+        //                         return;
+        //                     } else {
+        //                         if (place.address_components[2].short_name === stateName) {
+
+        //                             CityName = place.address_components[0].long_name;
+        //                             cityPlaceId = place.place_id;
+        //                             map.setCenter(place.geometry.location);
+        //                             map.setZoom(9);
+
+        //                         } else {
+        //                             window.alert("invalid address")
+        //                         }
+
+        //                     }
+        //                 })
+
+        //                 inputLocation.addEventListener('onchange', function () {
+        //                     address = inputLocation.textContent;
+        //                 })
+
+        //                 document.getElementById('save').onclick = function (e) {
+        //                     jQuery.ajax({
+        //                         url: "address?stateplaceid=" + statePlaceId + "&stateName=" + stateName + "&cityplaceid=" + cityPlaceId + "&cityName" + CityName + "&address" + address,
+        //                         type: "POST",
+        //                         // data: { 'image': (para1) },
+        //                         // dataType: "json",
+        //                         success: function (result) {
+        //                             window.alert("successfully saved");
+        //                             // window.location.href = "crop.html";
+
+        //                         }
+        //                     })
+
+        //                     console.log("saved")
+        //                 }
+
+
+        //             } else {
+        //                 window.alert("not an state");
+        //             }
+        //         }
+        //     });
+
+        // }

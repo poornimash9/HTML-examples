@@ -1,0 +1,174 @@
+<html>
+
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0%;
+            padding: 0;
+        }
+
+        .box {
+
+            height: 200px;
+            width: 200px;
+            border: 1px solid black;
+            position: relative;
+        }
+
+        .top_left {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            left: -5px;
+            top: -5px;
+            border: 1px solid blue;
+            cursor: nwse-resize;
+        }
+
+        .top_right {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            right: -5px;
+            top: -5px;
+            border: 1px solid blue;
+            cursor: nesw-resize;
+        }
+
+        .bottom_left {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            left: -5px;
+            bottom: -5px;
+            border: 1px solid blue;
+            cursor: nesw-resize;
+        }
+
+        .bottom_right {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            right: -5px;
+            bottom: -5px;
+            border: 1px solid blue;
+            cursor: nwse-resize;
+        }
+    </style>
+</head>
+
+<body style="margin-left:30px;">
+    <div id="box" class="box">
+        <div id="top_left" class="top_left"></div>
+        <div id="top_right" class="top_right"></div>
+        <div id="bottom_left" class="bottom_left"></div>
+        <div id="bottom_right" class="bottom_right"></div>
+    </div>
+
+    <script>
+
+        var box = document.getElementById('box');
+
+        var box_height=box.style.height;
+        var box_width=box.style.width;
+        var box_x=box.getBoundingClientRect().left;
+        var box_y=box.getBoundingClientRect().top;
+        var top_left = document.getElementById('top_left');
+        var top_right = document.getElementById('top_right');
+        var bottom_left = document.getElementById('bottom_left');
+        var bottom_right = document.getElementById('bottom_right');
+
+        document.addEventListener('mousedown', function (event) {
+
+            if (event.target.id == 'top_left') {
+                console.log("hello")
+                
+                top_left.addEventListener('mousedown', function (e) {
+                    window.addEventListener('mousemove', startResize_topleft);
+                    window.addEventListener('mouseup', finishResize_topleft);
+                });
+            } else if (event.target.id == 'top_right') {
+                console.log("hello 2")
+                
+                top_right.addEventListener('mousedown', function (e) {
+                    window.addEventListener('mousemove', startResize_topright);
+                    window.addEventListener('mouseup', finishResize_topright);
+                });
+            }
+            else if (event.target.id == 'bottom_left') {
+                console.log("hello 3")
+                
+                bottom_left.addEventListener('mousedown', function (e) {
+                    window.addEventListener('mousemove', startResize_bottomleft);
+                    window.addEventListener('mouseup', finishResize_bottomleft);
+                });
+            } else if (event.target.id == 'bottom_right') {
+                console.log("hello 4")
+                
+                bottom_right.addEventListener('mousedown', function (e) {
+                    window.addEventListener('mousemove', startResize_bottomright);
+                    window.addEventListener('mouseup', finishResize_bottomright);
+                });
+            }
+            else {
+                console.log("err");
+            }
+        })
+
+
+        function startResize_topleft(e) {
+            
+            box.style.width=box_width-(e.clientX-top_left.offsetLeft);
+            box.style.height=box_height-(e.clientY-top_left.offsetTop);
+            box.style.left=box_x+(e.clientX-top_left.offsetLeft);
+            box.style.top=box_y+(e.clientY-top_left.offsetTop);
+            
+        }
+        function finishResize_topleft(e) {
+
+            window.removeEventListener('mousemove', startResize_topleft, false);
+            window.removeEventListener('mouseup', finishResize_topleft, false);
+
+        }
+
+        function startResize_topright(e) {
+            box.style.width=(e.clientX-top_right.offsetLeft)+'px';
+            box.style.height=box_height-(e.clientY-top_right.offsetTop)+'px';
+            box.style.top=box_y+(e.clientY-top_left.offsetTop)+'px';
+
+        }
+        function finishResize_topright(e) {
+
+            window.removeEventListener('mousemove', startResize_topright, false);
+            window.removeEventListener('mouseup', finishResize_topright, false);
+
+        }
+
+
+        function startResize_bottomleft(e) {
+            box.style.width=box_width-(e.clientX-bottom_left.offsetLeft);
+            box.style.height=(e.clientY-bottom_left.offsetTop);
+            box.style.left=box_x+(e.clientX-top_left.offsetLeft);
+        }
+        function finishResize_bottomleft(e) {
+
+            window.removeEventListener('mousemove', startResize_bottomleft, false);
+            window.removeEventListener('mouseup', finishResize_bottomleft, false);
+
+        }
+
+        function startResize_bottomright(e) {
+            box.style.width=(e.clientX-bottom_right.offsetLeft);
+            box.style.height=(e.clientY-bottom_right.offsetTop);
+            box.style.top=box_y+(e.clientY-top_left.offsetTop);
+        }
+        function finishResize_bottomright(e) {
+
+            window.removeEventListener('mousemove', startResize_bottomright, false);
+            window.removeEventListener('mouseup', finishResize_bottomright, false);
+        }                
+    </script>
+</body>
+
+</html>

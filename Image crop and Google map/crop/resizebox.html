@@ -1,0 +1,109 @@
+<html>
+
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0%;
+            padding: 0;
+        }
+
+        .box {
+            height: 200px;
+            width: 200px;
+            border: 1px solid black;
+            position: relative;
+        }
+
+        .top_left {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            left: -5px;
+            top: -5px;
+            border: 1px solid blue;
+            cursor: nwse-resize;
+        }
+
+        .top_right {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            right: -5px;
+            top: -5px;
+            border: 1px solid blue;
+            cursor: nesw-resize;
+        }
+
+        .bottom_left {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            left: -5px;
+            bottom: -5px;
+            border: 1px solid blue;
+            cursor: nesw-resize;
+        }
+
+        .bottom_right {
+            height: 10px;
+            width: 10px;
+            position: absolute;
+            right: -5px;
+            bottom: -5px;
+            border: 1px solid blue;
+            cursor: nwse-resize;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box" class="box">
+        <div id="top_left" class="top_left"></div>
+        <div id="top_right" class="top_right"></div>
+        <div id="bottom_left" class="bottom_left"></div>
+        <div id="bottom_right" class="bottom_right"></div>
+    </div>
+
+
+    <script>
+        var box=document.getElementById('box');
+        var b1=document.getElementById('bottom_right');
+        var b2=document.getElementById('top_left');
+        b1.addEventListener('mousedown',function(e){
+            console.log("bottom_right")
+            b1.addEventListener('mousemove',function(e){
+                
+                box.style.height=e.clientY;
+                box.style.width=e.clientX;
+            })
+            b1.addEventListener('mouseup',function(e){
+                box.style.height=e.clientY;
+                box.style.width=e.clientX;
+            })
+            // b1.removeEventListener('mousedown')
+            
+        })
+
+        // b2.addEventListener('mousedown',function(e){
+        //     console.log("bottom_right")
+        //     b2.addEventListener('mousemove',function(e){
+                
+        //         box.style.top=e.clientY+200;
+        //         box.style.left=e.clientX+200;
+        //         // box.style.height=e.clientY-200;
+        //         // box.style.width=e.clientX-200;
+        //     })
+        //     b2.addEventListener('mouseup',function(e){
+        //         // box.style.height=e.clientY-200;
+        //         // box.style.width=e.clientX-200;
+        //         // box.style.top=e.clientY-200;
+        //         // box.style.left=e.clientX-200;
+        //     })
+        //     b2.removeEventListener('mousedown')
+            
+        // })
+    </script>
+</body>
+
+</html>

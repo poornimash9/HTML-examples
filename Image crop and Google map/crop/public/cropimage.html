@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        #field {
+            width: 100%;
+            height: 800px;
+            border: 1px solid black; 
+            /* opacity: 0.5;  */
+        }
+        
+        .draggable {
+            cursor: pointer;
+            height: 200px;
+            width: 200px;
+            border: dotted;
+            display: none;
+        }
+
+        .zone{
+            border: dotted;
+            height: 200px;
+            width: 200px;
+            position: relative;
+            overflow: hidden;
+            
+        }
+        .size {
+            position: absolute;
+        }
+        #box { 
+            width: 50%; 
+            height:200px; 
+            border: 3px solid green; 
+		} 
+    </style>
+</head>
+
+<body>
+
+    <h3>Image Upload</h3>
+    <form>
+        <input type="file" id="images" name="images" accept="image/*" onchange="openFile(event)">
+        <input type="submit" id="okbtn" name="add" value="Attach Photo" >
+        <div class="imgdiv">
+            <img id="field">
+            <div class="draggable" draggable="true" id="draggable"></div>
+        </div>
+
+        <br/>
+        <!-- drag and drop -->
+        <div id = "box" ondrop="dragDrop(event)" ondragover="allowDrop(event)">hello drop here </div>
+
+        <canvas id="canvasid" height="500" width="500"></canvas><br/>
+    </form>
+
+
+    <script>
+
+       function drawimage(link,p1,p2){
+           console.log("link",link);
+           var URL = window.URL;
+           var url = URL.createObjectURL(link);
+           console.log("url",url);
+           var canvas=document.getElementById('canvasid');
+           var context=canvas.getContext("2d");
+           var imageurl=new Image();
+           imageurl.onload=function(){
+               context.drawImage(imageurl,p1,p2,500,500,0,0,500,500);
+               var para1=canvas.toDataURL();
+               console.log("para1",para1)
+               var queryString = "?para1=" + para1;
+               window.location.href ="http://localhost:8083/c-on/c-on/crop/cropimage.html/add"+ queryString;
+           }
+           imageurl.src=url;       
+        }
+
+        var dataURL;
+        function allowDrop(ev) { 
+            ev.preventDefault(); 
+        } 
+        
+        function dragDrop(ev) { 
+            let newX,newY;
+            ev.preventDefault(); 
+            console.log("dropppingggg");
+            var data=ev.dataTransfer.files;
+                console.log("... Drop: File ",data[0]);
+                console.log("... Drop: File ");
+                var droptarget=document.getElementById("field");
+                var reader = new FileReader();
+                reader.onload = function(){
+                    dataURL = reader.result;
+                    droptarget.src=dataURL;
+                    droptarget.append(data);
+                    document.getElementById('draggable').style.display="block";
+
+                    document.addEventListener('mousedown', function (event) {
+                    let dragElement = document.getElementById('draggable');
+                    event.preventDefault();
+                   
+                    dragElement.ondragstart = function () {
+                        return false;
+                    };
+                    startDrag(dragElement, event.clientX, event.clientY);
+                
+                    function onMouseUp(event) {
+                        
+                        console.log("x and y in up",newX,newY);
+                        drawimage(data[0],newX,newY);
+                        
+                        document.removeEventListener('mousemove', onMouseMove);
+                        dragElement.removeEventListener('mouseup', onMouseUp);
+                    };
+
+                    function onMouseMove(event) {
+                        moveAt(event.offsetX,event.offsetY);
+
+                    }
+
+                    function startDrag(element, clientX, clientY) {
+                        document.addEventListener('mousemove', onMouseMove);
+                        element.addEventListener('mouseup', onMouseUp);
+                        element.style.position = 'fixed';
+
+                        moveAt(clientX, clientY);
+                    };
+                    function moveAt(clientX, clientY) {
+                        newX = clientX;
+                        newY = clientY;
+                        dragElement.style.left = newX + 'px';
+                        dragElement.style.top = newY + 'px';
+                    }
+                });
+            };
+            reader.readAsDataURL(data[0]);
+            console.log(data[0])
+        } 
+
+        var openFile = function(file) {
+            
+            let shiftX=0,shiftY=0,newX=0,newY=0,imgX=0,imgY=0;
+            console.log("fileeeeee",file)
+            var input = file.target;
+
+            var reader = new FileReader();
+            reader.onload = function(){
+                dataURL = reader.result;
+                var imgid=document.getElementById('field');
+                imgid.style.backgroundImage="url("+dataURL+")";
+
+                var dropbox=document.getElementById('box').style.display="none";
+                var dragblock=document.getElementById('draggable');
+                dragblock.style.display="block";
+               
+                document.addEventListener('mousedown', function (event) {
+                    let dragElement = document.getElementById('draggable');
+                    event.preventDefault();
+                    
+                    dragElement.ondragstart = function () {
+                        return false;
+                    };
+                    startDrag(dragElement, event.clientX, event.clientY);
+                
+                    function onMouseUp(event) {
+
+                        console.log("x and y in up",newX,newY);
+                        drawimage(input.files[0],newX,newY);
+                                
+                        document.removeEventListener('mousemove', onMouseMove);
+                        dragElement.removeEventListener('mouseup', onMouseUp);
+                    };
+
+                    function onMouseMove(event) {
+                        moveAt(event.offsetX,event.offsetY);
+
+                    }
+
+                    function startDrag(element, clientX, clientY) {
+                        document.addEventListener('mousemove', onMouseMove);
+                        element.addEventListener('mouseup', onMouseUp);
+                        element.style.position = 'fixed';
+
+                        moveAt(clientX, clientY);
+                    };
+                    function moveAt(clientX, clientY) {
+                        newX=clientX;
+                        newY=clientY;
+                        console.log("x and y",clientX,clientY);
+                        dragElement.style.left = clientX + 'px';
+                        dragElement.style.top = clientY + 'px';
+                    }
+                });
+            };
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0])
+        };
+      
+    </script>
+</body>
+
+</html>
+

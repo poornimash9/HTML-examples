@@ -1,0 +1,25 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "Examples done by me",
+  "main": "sequ.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poornimahabib/Examples.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/poornimahabib/Examples/issues"
+  },
+  "homepage": "https://github.com/poornimahabib/Examples#readme",
+  "dependencies": {
+    "mocha": "^5.2.0",
+    "mysql2": "^1.6.4",
+    "sequelize": "^4.42.0",
+    "uniqid": "^5.0.3"
+  }
+}

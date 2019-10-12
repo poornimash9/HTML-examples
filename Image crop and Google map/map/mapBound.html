@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <title>Map Bound</title>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            .search{
+                float: left;
+                width: 50%;
+            }
+            #map{
+                height: 80%;
+                width: 80%;
+                /* position: relative;
+                float: left; 
+                width: 50%; */
+                /* float: right; 
+                height: 80%;
+                width: 50%; */
+            }
+        </style>
+    </head>
+
+    <body>
+         <section>
+            <div class="search">
+                <form class="inputfields">
+                    <div style="display:flex;flex-direction:column">
+                        <span style="margin-left:10px;">Enter State*</span>
+                        <input id="inputstate" style="margin-left:10px;"  type="search" placeholder="search State here" required>
+                    </div><br/>
+                    <div style="display:flex;flex-direction:column">
+                        <span style="margin-left:10px;" >Enter your City*</span>
+                        <input id="inputcity" style="margin-left:10px;" type="text" placeholder="search City here" required>
+                    </div><br/>
+                    <div style="display:flex;flex-direction:column">
+                        <span style="margin-left:10px;" >Enter your address</span>
+                        <input id="inputadd" style="margin-left:10px;" type="text" placeholder="search address here">
+                    </div><br/>
+
+                    <button style="margin-left:10px;display: flex;align-self: center" >Submit</button>
+                </form>
+            </div>
+
+            <div id="map"></div>
+            <div style="clear:both"></div>
+        </section>
+
+        <script>
+            function initMap(){
+                var indiaBound=(20.5937,78.9629)
+                var loc=new google.maps.LatLng(28.7041,77.1025)
+                var map=new google.maps.Map( document.getElementById('map'),{
+                    center:loc,
+                    zoom:5,
+                    mapTypeId:'roadmap'
+                })
+                var marker = new google.maps.Marker({
+                    position: loc,
+                    map: map,
+                });
+                var inputState=document.getElementById('inputstate');
+                var inputCity=document.getElementById('inputcity');
+                var inputAdd=document.getElementById('inputadd');
+                var options={
+                    componentRestrictions:{'country':'IN','types':'(regions)'}
+                }
+                var stateSearchBox=new google.maps.places.Autocomplete(inputState,options);
+                var citySearchBox=new google.maps.places.SearchBox(inputCity);
+                var addSearchBox=new google.maps.places.SearchBox(inputAdd);
+                map.addListener('bounds_changed', function() {
+                    stateSearchBox.setBounds(map.getBounds());
+                });
+            }
+        </script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdKpI_wmZeYrt1Abjz6pCE39ETQ6LwAck&libraries=places&callback=initMap" async defer></script>
+    </body>
+</html>
